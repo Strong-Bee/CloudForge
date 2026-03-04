@@ -1,28 +1,20 @@
 #!/bin/bash
-# CloudForge - Auto Installer & Setup for Linux
+# CloudForge - Advanced Linux Setup
 
-echo "?? Starting CloudForge Setup on Linux..."
+echo "?? Optimizing CloudForge for Linux..."
 
-# Update System
-sudo apt update && sudo apt upgrade -y
+# Install Core
+sudo apt update && sudo apt install -y nginx mysql-server docker.io python3 python3-pip
 
-# Install Node.js 20.x
-if ! command -v node &> /dev/null; then
-    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-    sudo apt install -y nodejs
-fi
+# Permissions for Data & Backups
+mkdir -p data backups
+sudo chmod -R 775 data backups
+sudo chown -R $USER:$USER data backups
 
-# Install Core Services (Nginx, MySQL, Docker)
-sudo apt install -y nginx mysql-server certbot python3-certbot-nginx
-
-# Setup Permissions for CloudForge
+# Allow Sudo for API
 USER=$(whoami)
 echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/cloudforge
 sudo chmod 0440 /etc/sudoers.d/cloudforge
 
-# Setup Default Folders
-sudo mkdir -p /var/www
-sudo chown -R $USER:$USER /var/www
-
-echo "? Linux Setup Complete! You can now run CloudForge with: npm run dev"
+echo "? Linux optimization complete! Folder data/ and backups/ are now writable."
 
